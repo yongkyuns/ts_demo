@@ -37,7 +37,17 @@ const AddToList: React.FC<IProps> = ({ people, setPeople }) => {
         note: input.note,
       },
     ]);
+    setInput({
+      name: "",
+      age: "",
+      note: "",
+      img: "",
+    });
   };
+
+  function clearPeople() {
+    setPeople([]);
+  }
 
   return (
     <div className="AddToList">
@@ -73,8 +83,11 @@ const AddToList: React.FC<IProps> = ({ people, setPeople }) => {
         name="note"
       />
       <button className="AddToList-btn" onClick={handleClick}>
+        Add Player
+      </button>
+      <button className="AddToList-btn" onClick={clearPeople}>
         {" "}
-        AddToList Component
+        Clear{" "}
       </button>
     </div>
   );

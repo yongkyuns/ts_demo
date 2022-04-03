@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import { useState, useEffect } from "react";
 import "./App.css";
 import List from "./components/List";
 import AddToList from "./components/AddToList";
@@ -13,15 +12,33 @@ export interface IState {
   }[];
 }
 
+const LOCAL_STORAGE_KEY = "todoApp.todos";
+
 function App() {
-  const [people, setPeople] = useState<IState["people"]>([
-    {
-      name: "Lebron James",
-      url: "https://cdn.sportsforecaster.com/players/l.nba.com/60900/head/no-background/web",
-      age: 36,
-      note: "Allergic to stayin on the same team",
-    },
-  ]);
+  const [people, setPeople] = useState<IState["people"]>([]);
+
+  // Retrieve previously stored people at start-up
+  useEffect(() => {
+    const peopleJson = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (peopleJson) {
+      const storedPeople = JSON.parse(peopleJson);
+      if (storedPeople) setPeople(storedPeople);
+    } else {
+      setPeople([
+        {
+          name: "Lebron James",
+          url: "https://cdn.sportsforecaster.com/players/l.nba.com/60900/head/no-background/web",
+          age: 36,
+          note: "Allergic to stayin on the same team",
+        },
+      ]);
+    }
+  }, []);
+
+  // Store any changes to people
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(people));
+  }, [people]);
 
   return (
     <div className="App">
