@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./App.css";
 import List from "./components/List";
 import AddToList from "./components/AddToList";
@@ -6,6 +6,31 @@ import AddToList from "./components/AddToList";
 import { Stack, IStackTokens } from "@fluentui/react";
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
 
+import * as THREE from "three";
+import { Canvas, useFrame } from "@react-three/fiber";
+
+//////////////////////////////////////////////////////////////////
+function Box(props: JSX.IntrinsicElements["mesh"]) {
+  const ref = useRef<THREE.Mesh>(null!);
+  const [hovered, hover] = useState(false);
+  const [clicked, click] = useState(false);
+  useFrame((state, delta) => (ref.current.rotation.x += 0.01));
+  return (
+    <mesh
+      {...props}
+      ref={ref}
+      scale={clicked ? 1.5 : 1}
+      onClick={(event) => click(!clicked)}
+      onPointerOver={(event) => hover(true)}
+      onPointerOut={(event) => hover(false)}
+    >
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
+    </mesh>
+  );
+}
+
+//////////////////////////////////////////////////////////////////
 export interface IButtonExampleProps {
   // These are set based on the toggles shown above the examples (not needed in real code)
   disabled?: boolean;
@@ -42,6 +67,7 @@ export const ButtonDefaultExample: React.FunctionComponent<
 function _alertClicked(): void {
   alert("Clicked");
 }
+//////////////////////////////////////////////////////////////////
 
 export interface IState {
   people: {
@@ -85,6 +111,12 @@ function App() {
       <h1>People Invited to my Party</h1>
       <List people={people} />
       <AddToList people={people} setPeople={setPeople} />
+      <Canvas>
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
+        <Box position={[-1.2, 0, 0]} />
+        <Box position={[1.2, 0, 0]} />
+      </Canvas>
       <ButtonDefaultExample />
     </div>
   );
