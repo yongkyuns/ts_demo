@@ -3,6 +3,46 @@ import "./App.css";
 import List from "./components/List";
 import AddToList from "./components/AddToList";
 
+import { Stack, IStackTokens } from "@fluentui/react";
+import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+
+export interface IButtonExampleProps {
+  // These are set based on the toggles shown above the examples (not needed in real code)
+  disabled?: boolean;
+  checked?: boolean;
+}
+
+const stackTokens: IStackTokens = { childrenGap: 40 };
+
+export const ButtonDefaultExample: React.FunctionComponent<
+  IButtonExampleProps
+> = (props) => {
+  const { disabled, checked } = props;
+
+  return (
+    <Stack horizontal tokens={stackTokens}>
+      <DefaultButton
+        text="Standard"
+        onClick={_alertClicked}
+        allowDisabledFocus
+        disabled={disabled}
+        checked={checked}
+      />
+      <PrimaryButton
+        text="Primary"
+        onClick={_alertClicked}
+        allowDisabledFocus
+        disabled={disabled}
+        checked={checked}
+      />
+    </Stack>
+  );
+};
+
+function _alertClicked(): void {
+  alert("Clicked");
+}
+
 export interface IState {
   people: {
     name: string;
@@ -45,6 +85,7 @@ function App() {
       <h1>People Invited to my Party</h1>
       <List people={people} />
       <AddToList people={people} setPeople={setPeople} />
+      <ButtonDefaultExample />
     </div>
   );
 }
